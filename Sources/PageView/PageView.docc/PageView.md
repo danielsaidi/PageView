@@ -40,10 +40,9 @@ struct MyView: View {
         PageView(state) { page in
             VStack(spacing: 20) {
                 Text("Page \(page)")
-                HStack {
-                    Button("Next", action: state.showNextPage)
-                        .buttonStyle(.borderedProminent)
-                }
+                Button(buttonTitle, action: nextPageOrRestart)
+                    .padding(50)
+                    .buttonStyle(.borderedProminent)
             }
         }
         .pageViewAnimation(.bouncy)
@@ -68,6 +67,14 @@ struct MyView: View {
         case 4: .pink
         case 5: .mint
         default: .purple
+        }
+    }
+
+    func nextPageOrRestart() {
+        if state.isLastPage {
+            state.pageIndex = 0
+        } else {
+            state.showNextPage()
         }
     }
 }
