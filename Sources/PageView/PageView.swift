@@ -12,16 +12,13 @@ import Combine
 /// This custom page view implementation can be used on each
 /// major Apple platform.
 ///
-/// The view mimic a `TabView` with a `.page` style, and can
-/// be used in the same way. It wraps its page contents in a
-/// `ScrollView` that applies overlays and gestures to mimic
-/// the native `TabView` behavior.
+/// The view mimics a `TabView` with a `.page` style and can
+/// be used in the same way. It can be set up with a list of
+/// `pages` or a set of `items` together with a view builder.
 ///
-/// You can set up the view with a fixed set of `pages` or a
-/// set of `items` together with a page view builder.
-///
-/// The view supports arrow navigation, swiping, and tapping
-/// the horizontal edges to navigate between pages.
+/// The view wraps its content in a `ScrollView` and applies
+/// overlays and gestures to supports arrow navigation, edge
+/// taps and swipes.
 public struct PageView<PageViewType: View>: View {
 
     /// Create a page view with a list of page views.
