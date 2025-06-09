@@ -8,8 +8,11 @@ Until then, breaking changes can occur in minor version updates.
 
 ## 0.1
 
-### ✨ New features
+### ✨ Features
 
 * `PageView` is a multi-platform view component.
-* `PageViewIndicatorStyle` can be used to style the page views dots.
-* `View` has a `.pageViewIndicatorStyle` view modifier to apply a style. 
+* `PageViewIndicator` can be used to display page dots.
+* `PageViewState` can be used to manage page view state.
+* `View` has a `.pageViewAnimation` modifier to customize animations. 
+* `View` has a `.pageViewIndicatorDisplayMode` modifier to control page indicator mode.
+* `View` has a `.pageViewIndicatorStyle` modifier to customize the page indicator style. 
