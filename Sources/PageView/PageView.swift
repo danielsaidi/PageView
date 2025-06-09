@@ -19,19 +19,19 @@ import Combine
 /// The view wraps its content in a `ScrollView` and applies
 /// overlays and gestures to supports arrow navigation, edge
 /// taps and swipes.
+///
+/// You can customize the page indicator visibility with the
+/// ``SwiftUICore/View/pageViewDisplayMode(:)`` modifier and
+/// its style with ``SwiftUICore/View/pageViewIndicatorStyle(:)``.
 public struct PageView<PageViewType: View>: View {
 
     /// Create a page view with a list of page views.
     public init(
         pages: [PageViewType],
-        currentPageIndex: Binding<Int>,
-        pageIndicatorDisplayMode: PageViewIndicator.DisplayMode = .automatic,
-        pageIndicatorStyle: PageViewIndicatorStyle = .standard
+        currentPageIndex: Binding<Int>
     ) {
         self.currentPageIndex = currentPageIndex
         self.pages = pages
-        self.pageIndicatorDisplayMode = pageIndicatorDisplayMode
-        self.pageIndicatorStyle = pageIndicatorStyle
     }
 
     /// Create a page view with a list of values, and a page
@@ -39,22 +39,18 @@ public struct PageView<PageViewType: View>: View {
     public init<Model>(
         pages: [Model],
         currentPageIndex: Binding<Int>,
-        pageIndicatorDisplayMode: PageViewIndicator.DisplayMode = .automatic,
-        pageIndicatorStyle: PageViewIndicatorStyle = .standard,
         @ViewBuilder pageBuilder: (Model) -> PageViewType
     ) {
         self.currentPageIndex = currentPageIndex
         self.pages = pages.map(pageBuilder)
-        self.pageIndicatorDisplayMode = pageIndicatorDisplayMode
-        self.pageIndicatorStyle = pageIndicatorStyle
     }
 
     private var currentPageIndex: Binding<Int>
-    private let pageIndicatorDisplayMode: PageViewIndicator.DisplayMode
-    private let pageIndicatorStyle: PageViewIndicatorStyle
     private var pages: [PageViewType]
 
     @Environment(\.layoutDirection) var layoutDirection
+
+    @Environment(\.pageViewIndicatorDisplayMode) var pageIndicatorDisplayMode
 
     public var body: some View {
         GeometryReader { geo in
@@ -136,8 +132,7 @@ private extension PageView {
         if shouldShowPageIndicator {
             PageViewIndicator(
                 numberOfPages: pages.count,
-                currentPageIndex: currentPageIndex,
-                style: pageIndicatorStyle
+                currentPageIndex: currentPageIndex
             ).padding()
         } else {
             EmptyView()
