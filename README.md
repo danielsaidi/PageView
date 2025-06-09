@@ -21,7 +21,7 @@ PageView is a custom SwiftUI page view that works on all major Apple platforms.
     <img src="https://github.com/danielsaidi/PageView/releases/download/0.1.0/PageView-Demo.gif" width=350 />
 </p>
 
-`PageView` is a custom SwiftUI page view that works on all major Apple platforms. It mimics a native, paged TabView and can be used in the same way. It can be set up with a list of pages, a list of items, or a `PageViewState` value, and can be customized in many ways.
+`PageView` is a custom SwiftUI page view that works on all major Apple platforms. It mimics a paged TabView and can be used in the same way. It can be set up with a list of pages, a list of items, or a `PageViewState` value, and can be customized in many ways.
 
 
 
