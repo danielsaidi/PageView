@@ -11,9 +11,9 @@ import SwiftUI
 /// This view can be used to display a horizontal collection
 /// of dots that are bound to pages in a ``PageView``.
 ///
-/// You can customize the page indicator visibility with the
-/// ``SwiftUICore/View/pageViewDisplayMode(:)`` modifier and
-/// its style with ``SwiftUICore/View/pageViewIndicatorStyle(:)``.
+/// Available view modifiers:
+///   - ``SwiftUICore/View/pageViewIndicatorDisplayMode(_:)``
+///   - ``SwiftUICore/View/pageViewIndicatorStyle(_:)``.
 public struct PageViewIndicator: View {
 
     /// Create a page indicator.
@@ -87,21 +87,18 @@ public extension PageViewIndicator {
         ///   - currentDotColor: The current dot color, by default `.white`.
         ///   - currentDotSize: The current dot size in points, by default `10`.
         ///   - dotSpacing: The spacing to apply between dots, by default `nil`.
-        ///   - isAnimated: Whether or not changing pages is animated, by default `true`.
         public init(
             dotColor: Color = .white.opacity(0.5),
             dotSize: CGFloat = 7,
             dotSpacing: CGFloat? = nil,
             currentDotColor: Color = .white,
-            currentDotSize: CGFloat = 7,
-            isAnimated: Bool = true
+            currentDotSize: CGFloat = 7
         ) {
             self.dotColor = dotColor
             self.dotSize = dotSize
             self.dotSpacing = dotSpacing
             self.currentDotColor = currentDotColor
             self.currentDotSize = currentDotSize
-            self.isAnimated = isAnimated
         }
 
         /// The indicator current dot color.
@@ -118,9 +115,6 @@ public extension PageViewIndicator {
 
         /// The spacing to apply between dots.
         public var dotSpacing: CGFloat?
-
-        /// Whether or not changing pages is animated.
-        public var isAnimated: Bool
     }
 }
 
@@ -149,7 +143,7 @@ public extension View {
     }
 
     /// Inject a custom ``PageViewIndicator/Style`` value.
-    func pageViewIndicatorDisplayStyle(
+    func pageViewIndicatorStyle(
         _ value: PageViewIndicator.Style
     ) -> some View {
         self.environment(\.pageViewIndicatorStyle, value)
@@ -163,33 +157,30 @@ private extension PageViewIndicator {
     }
     
     func setCurrentPage(_ index: Int) {
-        if style.isAnimated {
-            withAnimation { currentPageIndex.wrappedValue = index }
-        } else {
-            currentPageIndex.wrappedValue = index
-        }
+        currentPageIndex.wrappedValue = index
     }
 }
 
 #Preview {
-    
+
+    @Previewable @State var index = 0
+
     VStack(spacing: 20) {
         PageViewIndicator(
             numberOfPages: 10,
-            currentPageIndex: .constant(3)
+            currentPageIndex: $index
         )
         
         PageViewIndicator(
             numberOfPages: 5,
-            currentPageIndex: .constant(3)
+            currentPageIndex: $index
         )
-        .pageViewIndicatorDisplayStyle(.init(
+        .pageViewIndicatorStyle(.init(
             dotColor: .blue,
             dotSize: 15,
             dotSpacing: 30,
             currentDotColor: .yellow,
-            currentDotSize: 25,
-            isAnimated: true
+            currentDotSize: 25
         ))
     }
     .padding()

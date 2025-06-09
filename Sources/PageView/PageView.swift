@@ -12,44 +12,78 @@ import Combine
 /// This custom page view implementation can be used on each
 /// major Apple platform.
 ///
-/// The view mimics a `TabView` with a `.page` style and can
-/// be used in the same way. It can be set up with a list of
-/// `pages` or a set of `items` together with a view builder.
+/// The view mimics a native, paged tab view and can be used
+/// in the same way. It can be created with page views, page
+/// view models or a ``PageViewState``. It wraps its content
+/// in a scroll view and applies keyboard arrow bindings and
+/// gestures to support keyboard arrow navigation, edge taps
+/// and swipes.
 ///
-/// The view wraps its content in a `ScrollView` and applies
-/// overlays and gestures to supports arrow navigation, edge
-/// taps and swipes.
+/// Available view modifiers:
+///   - ``SwiftUICore/View/pageViewAnimation(_:)``
+///   - ``SwiftUICore/View/pageViewIndicatorDisplayMode(_:)``
+///   - ``SwiftUICore/View/pageViewIndicatorStyle(_:)``
 ///
-/// You can customize the page indicator visibility with the
-/// ``SwiftUICore/View/pageViewDisplayMode(:)`` modifier and
-/// its style with ``SwiftUICore/View/pageViewIndicatorStyle(:)``.
+/// > Important: Since the edge swipes and tap gestures will
+/// be applied to the background view, you shouldn't apply a
+/// background to the pages. To apply a background, do apply
+/// it to the entire page view, and not the individual pages.
+/// You can still vary a background based on your page index.
 public struct PageView<PageViewType: View>: View {
 
-    /// Create a page view with a list of page views.
+    /// Create a page view with a list of views.
+    ///
+    /// - Parameters:
+    ///   - pages: The page views to show.
+    ///   - pageIndex: A page index binding.
     public init(
         pages: [PageViewType],
-        currentPageIndex: Binding<Int>
+        pageIndex: Binding<Int>
     ) {
-        self.currentPageIndex = currentPageIndex
+        self.pageIndex = pageIndex
         self.pages = pages
     }
 
-    /// Create a page view with a list of values, and a page
-    /// view builder that is called for each value.
+    /// Create a page view with a list of values.
+    ///
+    /// - Parameters:
+    ///   - pages: The page values to show.
+    ///   - pageIndex: A page index binding.
+    ///   - pageBuilder: A page view builder.
     public init<Model>(
         pages: [Model],
-        currentPageIndex: Binding<Int>,
+        pageIndex: Binding<Int>,
         @ViewBuilder pageBuilder: (Model) -> PageViewType
     ) {
-        self.currentPageIndex = currentPageIndex
+        self.pageIndex = pageIndex
         self.pages = pages.map(pageBuilder)
     }
 
-    private var currentPageIndex: Binding<Int>
+    /// Create a page view with a page view state value.
+    ///
+    /// - Parameters:
+    ///   - state: A page index binding.
+    ///   - pageBuilder: A page view builder.
+    public init<Model>(
+        _ state: PageViewState<Model>,
+        @ViewBuilder pageBuilder: (Model) -> PageViewType
+    ) {
+        self.init(
+            pages: state.pages,
+            pageIndex: .init(
+                get: { state.pageIndex },
+                set: { state.pageIndex = $0 }
+            ),
+            pageBuilder: pageBuilder
+        )
+    }
+
+    private var pageIndex: Binding<Int>
     private var pages: [PageViewType]
 
     @Environment(\.layoutDirection) var layoutDirection
 
+    @Environment(\.pageViewAnimation) var pageViewAnimation
     @Environment(\.pageViewIndicatorDisplayMode) var pageIndicatorDisplayMode
 
     public var body: some View {
@@ -65,8 +99,8 @@ public struct PageView<PageViewType: View>: View {
                         showPrevious: { showPreviousPage() },
                         showNext: { showNextPage() }
                     )
-                    .onReceive(Just(currentPageIndex)) { index in
-                        withAnimation {
+                    .onReceive(Just(pageIndex)) { index in
+                        withAnimation(pageViewAnimation) {
                             scroll.scrollTo(index.wrappedValue)
                         }
                     }
@@ -75,6 +109,22 @@ public struct PageView<PageViewType: View>: View {
                 pageIndicator
             }
         }
+    }
+}
+
+public extension EnvironmentValues {
+
+    /// Inject a custom page view animation value.
+    @Entry var pageViewAnimation: Animation = .linear
+}
+
+public extension View {
+
+    /// Inject a custom page view animation value.
+    func pageViewAnimation(
+        _ value: Animation
+    ) -> some View {
+        self.environment(\.pageViewAnimation, value)
     }
 }
 
@@ -87,7 +137,7 @@ private extension View {
         showPrevious: @escaping () -> Void,
         showNext: @escaping () -> Void
     ) -> some View {
-        #if os(iOS) || os(watchOS)
+        #if os(iOS) || os(watchOS) || os(visionOS)
         if #available(iOS 16.0, watchOS 9.0, *) {
             self.scrollDisabled(true)
         } else {
@@ -132,8 +182,9 @@ private extension PageView {
         if shouldShowPageIndicator {
             PageViewIndicator(
                 numberOfPages: pages.count,
-                currentPageIndex: currentPageIndex
-            ).padding()
+                currentPageIndex: pageIndex
+            )
+            .padding()
         } else {
             EmptyView()
         }
@@ -141,7 +192,7 @@ private extension PageView {
 
     // This is needed for the scroll view transition to play.
     func bugfixLayer(for scroll: ScrollViewProxy) -> some View {
-        Text("\(currentPageIndex.wrappedValue)")
+        Text("\(pageIndex.wrappedValue)")
             .opacity(0)
     }
 
@@ -190,48 +241,61 @@ private extension PageView {
     
     var shouldShowPageIndicator: Bool {
         switch pageIndicatorDisplayMode {
-        case .always: return true
-        case .automatic: return pages.count > 1
-        case .never: return false
+        case .always: true
+        case .automatic: pages.count > 1
+        case .never: false
         }
     }
 
     func setPageIndex(to index: Int) {
-        currentPageIndex.wrappedValue = index
+        pageIndex.wrappedValue = index
     }
     
     func showNextPage() {
-        guard currentPageIndex.wrappedValue < pages.count - 1 else { return }
-        setPageIndex(to: currentPageIndex.wrappedValue + 1)
+        guard pageIndex.wrappedValue < pages.count - 1 else { return }
+        setPageIndex(to: pageIndex.wrappedValue + 1)
     }
     
     func showPreviousPage() {
-        guard currentPageIndex.wrappedValue > 0 else { return }
-        setPageIndex(to: currentPageIndex.wrappedValue - 1)
+        guard pageIndex.wrappedValue > 0 else { return }
+        setPageIndex(to: pageIndex.wrappedValue - 1)
     }
 }
 
 #Preview {
 
-    struct Preview: View {
+    @Previewable @State var state = PageViewState(pages: Array(0...5))
 
-        @State var pageIndex = 0
-
-        var body: some View {
-            PageView(
-                pages: Array(1...10),
-                currentPageIndex: $pageIndex
-            ) { page in
-                VStack {
-                    Text("\(page)")
-                    HStack {
-                        Button("Next") { pageIndex += 1 }
-                    }
-                }
+    return PageView(state) { value in
+        VStack(spacing: 20) {
+            Text("Page \(value)")
+            HStack {
+                Button("Next", action: state.showNextPage)
+                    .buttonStyle(.borderedProminent)
             }
-            .background(Color.red)
         }
     }
+    .pageViewAnimation(.bouncy)
+    .pageViewIndicatorDisplayMode(.automatic)
+    .pageViewIndicatorStyle(.init(
+        dotColor: .blue,
+        currentDotColor: .yellow
+    ))
+    .background(
+        color(for: state.pageIndex)
+            .ignoresSafeArea()
+            .animation(.easeOut, value: state.pageIndex)
+    )
 
-    return Preview()
+    func color(for index: Int) -> Color {
+        switch index {
+        case 0: .red
+        case 1: .green
+        case 2: .purple
+        case 3: .orange
+        case 4: .pink
+        case 5: .mint
+        default: .black
+        }
+    }
 }

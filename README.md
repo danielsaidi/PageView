@@ -18,10 +18,10 @@
 PageView is a custom SwiftUI page view that works on all major Apple platforms.
 
 <p align="center">
-    <img src="https://github.com/danielsaidi/PageView/releases/download/8.2.0/PageView-Demo.gif" width=350 />
+    <img src="https://github.com/danielsaidi/PageView/releases/download/0.1.0/PageView-Demo.gif" width=350 />
 </p>
 
-PageView mimics a native `TabView` with a `.page` style and can be used in the same way. It can be set up with a list of `pages`, or a list of `items` with a view builder.
+`PageView` is a custom SwiftUI page view that works on all major Apple platforms. It mimics a native, paged TabView and can be used in the same way. It can be set up with a list of pages, a list of items, or a `PageViewState` value, and can be customized in many ways.
 
 
 
@@ -34,6 +34,7 @@ https://github.com/danielsaidi/PageView.git
 ```
 
 
+
 ## Support My Work
 
 You can [become a sponsor][Sponsors] to help me dedicate more time on my various [open-source tools][OpenSource]. Every contribution, no matter the size, makes a real difference in keeping these tools free and actively developed.
@@ -42,9 +43,51 @@ You can [become a sponsor][Sponsors] to help me dedicate more time on my various
 
 ## Getting started
 
-TBD...
+You can create a ``PageView`` with a collection of page views, an array of page items, or a ``PageViewState``.
 
-See the online [getting started guide][Getting-Started] for more information.
+```swift
+struct MyView: View {
+
+    @State var state = PageViewState(pages: Array(0...5))
+
+    var body: some View {
+        PageView(state) { page in
+            VStack(spacing: 20) {
+                Text("Page \(page)")
+                HStack {
+                    Button("Next", action: state.showNextPage)
+                        .buttonStyle(.borderedProminent)
+                }
+            }
+        }
+        .pageViewAnimation(.bouncy)
+        .pageViewIndicatorDisplayMode(.automatic)
+        .pageViewIndicatorStyle(.init(
+            dotColor: .blue,
+            currentDotColor: .yellow
+        ))
+        .background(
+            color(for: state.pageIndex)
+                .ignoresSafeArea()
+                .animation(.easeOut, value: state.pageIndex)
+        )
+    }
+
+    func color(for index: Int) -> Color {
+        switch index {
+        case 0: .red
+        case 1: .green
+        case 2: .blue
+        case 3: .orange
+        case 4: .pink
+        case 5: .mint
+        default: .purple
+        }
+    }
+}
+```
+
+You can customize the page view animation with the ``pageViewAnimation(_:)`` view modifier, the page indicator display mode with ``pageViewIndicatorDisplayMode(_:)`` and its style with ``pageViewIndicatorStyle(_:)``.
 
 
 
