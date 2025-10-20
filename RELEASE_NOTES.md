@@ -10,10 +10,6 @@ Until then, breaking changes can occur in minor version updates.
 
 This version makes the SDK use Swift 6.1 and bumps the demo to Xcode 26.
 
-### ✨ Features
-
-* `PageView` is a multi-platform view component.
-
 
 
 ## 0.1
