@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-/// This view can be used to display a horizontal collection
-/// of dots that are bound to pages in a ``PageView``.
+/// This view can be used to display a horizontal collection of dots that are bound
+/// to the pages in a ``PageView``.
 ///
 /// Available view modifiers:
 ///   - ``SwiftUICore/View/pageViewIndicatorDisplayMode(_:)``

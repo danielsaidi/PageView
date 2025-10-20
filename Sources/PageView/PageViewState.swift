@@ -9,8 +9,8 @@
 import SwiftUI
 import Combine
 
-/// This class can be used to manage page view state, with a
-/// set of additional functions to handle navigation.
+/// This class can be used to manage page view state, with a set of functions that
+/// can handle navigation.
 @Observable
 public class PageViewState<PageModel> {
 

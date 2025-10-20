@@ -9,8 +9,8 @@
 #if os(iOS) || os(macOS) || os(watchOS) || os(visionOS)
 import SwiftUI
 
-/// This modifier can be used to apply swipe gestures, which
-/// will trigger actions when it's swiped in any direction.
+/// This modifier can be used to apply swipe gestures, to trigger actions when it's
+/// swiped in any direction.
 struct SwipeGestureViewModifier: ViewModifier {
 
     init(
