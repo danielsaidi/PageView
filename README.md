@@ -7,9 +7,7 @@
     <img src="https://img.shields.io/badge/Swift-6.1-orange.svg" alt="Swift 6.1" />
     <a href="https://danielsaidi.github.io/PageView"><img src="https://img.shields.io/badge/documentation-web-blue.svg" alt="Documentation" /></a>
     <a href="https://github.com/danielsaidi/PageView/blob/master/LICENSE"><img src="https://img.shields.io/github/license/danielsaidi/PageView" alt="MIT License" /></a>
-    <a href="https://github.com/sponsors/danielsaidi"><img src="https://img.shields.io/badge/sponsor-GitHub-red.svg" alt="Sponsor my work" /></a>
 </p>
-
 
 
 # PageView
@@ -23,7 +21,6 @@ PageView is a custom SwiftUI page view that works on all major Apple platforms.
 `PageView` is a custom SwiftUI page view that works on all major Apple platforms. It mimics a paged TabView and can be set up with a list of pages, a list of items, or a `PageViewState` value.
 
 
-
 ## Installation
 
 PageView can be installed with the Swift Package Manager:
@@ -31,13 +28,6 @@ PageView can be installed with the Swift Package Manager:
 ```
 https://github.com/danielsaidi/PageView.git
 ```
-
-
-
-## Support My Work
-
-You can [become a sponsor][Sponsors] to help me dedicate more time on my various [open-source tools][OpenSource]. Every contribution, no matter the size, makes a real difference in keeping these tools free and actively developed.
-
 
 
 ## Getting started
@@ -96,17 +86,19 @@ struct MyView: View {
 You can customize the page view animation with the ``pageViewAnimation(_:)`` view modifier, the page indicator display mode with ``pageViewIndicatorDisplayMode(_:)`` and its style with ``pageViewIndicatorStyle(_:)``.
 
 
-
 ## Documentation
 
 The online [documentation][Documentation] has more information, articles, code examples, etc.
-
 
 
 ## Demo Application
 
 The `Demo` folder has an app that lets you test the library.
 
+
+## Support My Work
+
+You can [become a sponsor][Sponsors] to help me dedicate more time on my various [open-source tools][OpenSource]. Every contribution, no matter the size, makes a real difference in keeping these tools free and actively developed.
 
 
 ## Contact
@@ -119,11 +111,9 @@ Feel free to reach out if you have questions or if you want to contribute in any
 * Mastodon: [@danielsaidi@mastodon.social][Mastodon]
 
 
-
 ## License
 
 PageView is available under the MIT license. See the [LICENSE][License] file for more info.
-
 
 
 [Email]: mailto:daniel.saidi@gmail.com
