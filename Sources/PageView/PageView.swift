@@ -9,22 +9,27 @@
 import SwiftUI
 import Combine
 
-/// This custom page view can be used on all major Apple platforms.
+/// This view mimics a native paged tab view and can be used
+/// in the same way.
 ///
-/// This view mimics a native paged tab view and can be used in the same way. It
-/// can be created with page views, page models or a ``PageViewState``.
+/// The view can be created with page views, page models, or
+/// a ``PageViewState`` value.
 ///
-/// This view wraps its content in a scroll view and applies arrow key bindings and
-/// gestures to support keyboard arrow navigation, edge taps and swipes.
+/// This view wraps its content in a scroll view and applies
+/// arrow key bindings and gestures to support edge taps and
+/// swipes, and keyboard arrow navigation.
 ///
-/// Available view modifiers:
+/// Since these edge gestures are applied to the backgrounds
+/// of the content views, DO NOT apply a background to these
+/// content views. Instead, apply a background to the entire
+/// page view, and use the page index to change it if needed.
+///
+/// The view can be styled and customized with the following
+/// view modifiers:
+///
 ///   - ``SwiftUICore/View/pageViewAnimation(_:)``
 ///   - ``SwiftUICore/View/pageViewIndicatorDisplayMode(_:)``
 ///   - ``SwiftUICore/View/pageViewIndicatorStyle(_:)``
-///
-/// > Important: Since gestures are applied to the background view, you shouldn't
-/// apply a background to the pages within this view. Instead, apply a background
-/// to the entire page view. You can vary the background based on the page index.
 public struct PageView<PageViewType: View>: View {
 
     /// Create a page view with a list of views.
