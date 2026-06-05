@@ -265,7 +265,8 @@ private extension PageView {
 
 #Preview {
 
-    @Previewable @State var state = PageViewState(pages: Array(0...5))
+    @Previewable @State
+    var state = PageViewState(pages: Array(0...5))
 
     return PageView(state) { value in
         VStack(spacing: 20) {
